@@ -25,3 +25,7 @@ kratix add container resource/configure/pipeline0 --image syntasso/postgres-reso
 ## Updating Dependencies
 
 TBD
+
+## Workshop guide
+
+- https://docs.kratix.io/workshop/part-ii/writing-your-first-promise
