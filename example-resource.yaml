@@ -7,3 +7,4 @@ spec:
   image: syntasso/sample-todo:v0.1.0
   service:
     port: 8080
+  dbDriver: postgresql

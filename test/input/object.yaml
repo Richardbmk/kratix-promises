@@ -7,6 +7,7 @@ spec:
   image: example/image:v1.0.0
   service:
     port: 9000
+  dbDriver: postgresql
 status:
   createdAt: 'Sat May 31 07:03:21 UTC 2025'
   message: 'my-app.local.gd:31338'

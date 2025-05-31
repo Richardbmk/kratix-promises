@@ -6,9 +6,6 @@ metadata:
     kratix.io/promise-version: v0.0.1
   name: app
 spec:
-  requiredPromises:
-    - name: postgresql
-      version: v1.0.0-beta.2
   api:
     apiVersion: apiextensions.k8s.io/v1
     kind: CustomResourceDefinition
@@ -29,8 +26,6 @@ spec:
               properties:
                 spec:
                   properties:
-                    dbDriver:
-                      type: string
                     image:
                       type: string
                     service:
@@ -66,40 +61,32 @@ spec:
           metadata:
             name: mypipeline
           spec:
+            rbac:
+              permissions:
+                - apiGroups: ['']
+                  verbs: ['*']
+                  resources: ['configmaps']
             containers:
-              - command:
-                  - resource-configure
-                image: kratix-workshop/app-pipeline-image:v1.0.0
+              - image: kratix-workshop/app-pipeline-image:v1.0.0
                 name: kratix-workshop-app-pipeline-image
-              - command:
-                  - create-bucket
+                command: [resource-configure]
+              - name: create-bucket
+                image: kratix-workshop/app-pipeline-image:v1.0.0
+                command: [create-bucket]
                 env:
                   - name: MINIO_ENDPOINT
                     valueFrom:
                       secretKeyRef:
-                        key: endpoint
                         name: app-promise-minio-creds
+                        key: endpoint
                   - name: MINIO_USER
                     valueFrom:
                       secretKeyRef:
-                        key: username
                         name: app-promise-minio-creds
+                        key: username
                   - name: MINIO_PASSWORD
                     valueFrom:
                       secretKeyRef:
-                        key: password
                         name: app-promise-minio-creds
-                image: kratix-workshop/app-pipeline-image:v1.0.0
-                name: create-bucket
-              - name: database-configure
-                image: kratix-workshop/app-pipeline-image:v1.0.0
-                command: [database-configure]
-            rbac:
-              permissions:
-                - apiGroups:
-                    - ''
-                  resources:
-                    - configmaps
-                  verbs:
-                    - '*'
+                        key: password
 status: {}

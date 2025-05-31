@@ -1,7 +1,8 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
+  creationTimestamp:
   labels:
     app: my-app
   name: my-app
@@ -14,7 +15,7 @@ spec:
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
+      creationTimestamp:
       labels:
         app: my-app
     spec:
@@ -22,4 +23,19 @@ spec:
       - image: example/image:v1.0.0
         name: image
         resources: {}
+        env:
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: my-appteam.my-appteam-my-appdb-postgresql.credentials.postgresql.acid.zalan.do
+              key: password
+        - name: PGUSER
+          valueFrom:
+            secretKeyRef:
+              name: my-appteam.my-appteam-my-appdb-postgresql.credentials.postgresql.acid.zalan.do
+              key: username
+        - name: PGHOST
+          value: my-appteam-my-appdb-postgresql.default.svc.cluster.local
+        - name: DBNAME
+          value: my-appdb
 status: {}
