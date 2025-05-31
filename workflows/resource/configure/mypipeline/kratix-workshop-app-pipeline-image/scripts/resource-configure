@@ -33,7 +33,8 @@ kubectl create ingress ${name} \
     --dry-run=client \
     --output yaml > /kratix/output/ingress.yaml
 
-# Set the resource status
-cat <<EOF > /kratix/metadata/status.yaml
-message: "${name}.local.gd:31338"
-EOF
+
+createdAt=$(yq '.status.createdAt // ""' /kratix/input/object.yaml)
+if [ -z "$createdAt" ]; then
+  createdAt="$(date)"
+fi
