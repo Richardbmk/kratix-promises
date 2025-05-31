@@ -65,4 +65,23 @@ spec:
               - image: kratix-workshop/app-pipeline-image:v1.0.0
                 name: kratix-workshop-app-pipeline-image
                 command: [resource-configure]
+              - name: create-bucket
+                image: kratix-workshop/app-pipeline-image:v1.0.0
+                command: [create-bucket]
+                env:
+                  - name: MINIO_ENDPOINT
+                    valueFrom:
+                      secretKeyRef:
+                        name: app-promise-minio-creds
+                        key: endpoint
+                  - name: MINIO_USER
+                    valueFrom:
+                      secretKeyRef:
+                        name: app-promise-minio-creds
+                        key: username
+                  - name: MINIO_PASSWORD
+                    valueFrom:
+                      secretKeyRef:
+                        name: app-promise-minio-creds
+                        key: password
 status: {}
