@@ -61,6 +61,11 @@ spec:
           metadata:
             name: mypipeline
           spec:
+            rbac:
+              permissions:
+                - apiGroups: ['']
+                  verbs: ['*']
+                  resources: ['configmaps']
             containers:
               - image: kratix-workshop/app-pipeline-image:v1.0.0
                 name: kratix-workshop-app-pipeline-image

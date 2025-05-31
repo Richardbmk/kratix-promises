@@ -7,4 +7,22 @@ namespace=$(yq '.metadata.namespace' /kratix/input/object.yaml)
 
 cd resources
 terraform init
-terraform apply -auto-approve --var="bucket_name=${name}.${namespace}"
+
+# Check if the state exists and retrieve it if so
+if kubectl get configmap ${name}-state; then
+    kubectl get configmap ${name}-state \
+        --output=jsonpath='{.data.tfstate}' \
+        > state.tfstate
+fi
+
+terraform apply \
+    -auto-approve \
+    --var="bucket_name=${name}.${namespace}" \
+    -state=state.tfstate
+
+# Store the state in a ConfigMap
+kubectl create configmap ${name}-state \
+    --from-file=tfstate=state.tfstate \
+    --dry-run=client \
+    --output=yaml > configmap.yaml
+kubectl replace --filename configmap.yaml --force

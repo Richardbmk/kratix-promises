@@ -32,3 +32,8 @@ kubectl create ingress ${name} \
     --rule="${name}.local.gd/*=${name}:${service_port}" \
     --dry-run=client \
     --output yaml > /kratix/output/ingress.yaml
+
+# Set the resource status
+cat <<EOF > /kratix/metadata/status.yaml
+message: "${name}.local.gd:31338"
+EOF
